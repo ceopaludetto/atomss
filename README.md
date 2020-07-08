@@ -55,14 +55,10 @@ hydrate(); // just run hydrate, this method will handle your previous generated 
 ### Server side
 
 ```javascript
-import { setup, Cache, getStyleTag, getScriptTag } from 'atomss';
+import { seal, getStyleTag, getScriptTag } from 'atomss';
 
 router.get('/', (req, res) => {
-  const cache = new Cache(); // create a new cache instance or every request
-
-  setup({ cache }); // setup atomss with this new cache instance
-
-  renderToString(); // this example show in react, but the setup should run before string render
+  renderToString();
 
   res.send(`
     <html>
@@ -76,7 +72,7 @@ router.get('/', (req, res) => {
     </html>
   `);
 
-  cache.clear(); // run clear to avoid mismatch
+  seal(); // run clear to avoid mismatch
 });
 ```
 

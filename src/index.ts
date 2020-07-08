@@ -85,13 +85,16 @@ class Create {
       this.cacheManager.all()
     )}</script>`;
   };
+
+  public seal = () => {
+    this.injector.clear();
+    this.cacheManager.clear();
+  };
 }
 
 const inst = new Create();
 
-if (typeof window !== 'undefined') {
-  inst.setup({});
-}
+inst.setup({});
 
 export const setup = inst.setup;
 export const css = inst.css;
@@ -100,4 +103,4 @@ export const keyframes = inst.keyframes;
 export const getStyleTag = inst.getStyleTag;
 export const getScriptTag = inst.getScriptTag;
 export const hydrate = inst.hydrate;
-export { Cache };
+export const seal = inst.seal;
