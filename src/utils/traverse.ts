@@ -24,7 +24,7 @@ export function traverse(rules: ScopedCSSRules) {
     if (typeof props !== 'object') {
       copy = { ...copy, [camelToDash(key)]: props };
     } else {
-      copy = { ...copy, [key]: props };
+      copy = { ...copy, [key]: traverse(props) };
     }
   });
 
