@@ -69,7 +69,7 @@ export function toClassName({
 
     const [property, defs] = declaration.split(':');
 
-    if (property === 'animation') {
+    if (property.includes('animation')) {
       defs.split(' ').forEach(x => {
         const style = cache.getByHash(x.replace(prefix, ''));
         if (style && !cache.get(style).injected) {

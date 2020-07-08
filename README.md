@@ -1,27 +1,91 @@
-# TSDX Bootstrap
+# Atomss
 
-This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
+An framework-agnostic atomic css-in-js library with support to nested and ssr
 
-## Local Development
+## Installation
 
-Below is a list of commands you will probably find useful.
+To install just run `npm install atomss` or `yarn add atomss`
 
-### `npm start` or `yarn start`
+## Usage
 
-Runs the project in development/watch mode. Your project will be rebuilt upon changes. TSDX has a special logger for you convenience. Error messages are pretty printed and formatted for compatibility VS Code's Problems tab.
+```javascript
+import { css, clsx, keyframes } from 'atomss';
 
-<img src="https://user-images.githubusercontent.com/4060187/52168303-574d3a00-26f6-11e9-9f3b-71dbec9ebfcb.gif" width="600" />
+const animation = keyframes({
+  // percents work too
+  from: {
+    color: 'red',
+  },
+  to: {
+    color: 'blue',
+  },
+});
 
-Your library will be rebuilt if you make edits.
+const styles = css({
+  color: 'red',
+  animation: `${animation} 5s ease infinite`,
+  '&:hover': {
+    color: 'gray',
+  },
+  '@media (min-width: 300px)': {
+    color: 'yellow',
+  },
+});
 
-### `npm run build` or `yarn build`
+const another = css({
+  color: 'red', // will use the same classname
+  backgroundColor: 'blue',
+});
 
-Bundles the package to the `dist` folder.
-The package is optimized and bundled with Rollup into multiple formats (CommonJS, UMD, and ES Module).
+const classNames = clsx(styles, another);
+```
 
-<img src="https://user-images.githubusercontent.com/4060187/52168322-a98e5b00-26f6-11e9-8cf6-222d716b75ef.gif" width="600" />
+## SSR
 
-### `npm test` or `yarn test`
+To handle server usages, atomss will provide some helpers, such as `hydrate` and `Cache`
 
-Runs the test watcher (Jest) in an interactive mode.
-By default, runs tests related to files changed since the last commit.
+### Client side
+
+```javascript
+import { hydrate } from 'atomss';
+
+hydrate(); // just run hydrate, this method will handle your previous generated cache
+```
+
+### Server side
+
+```javascript
+import { setup, Cache, getStyleTag, getScriptTag } from 'atomss';
+
+router.get('/', (req, res) => {
+  const cache = new Cache(); // create a new cache instance or every request
+
+  setup({ cache }); // setup atomss with this new cache instance
+
+  renderToString(); // this example show in react, but the setup should run before string render
+
+  res.send(`
+    <html>
+      <head>
+        ${getStyleTag()}
+      </head>
+      <body>
+        <div id="app"></div>
+        ${getScriptTag()}
+      </body>
+    </html>
+  `);
+
+  cache.clear(); // run clear to avoid mismatch
+});
+```
+
+## Alert
+
+Today atomss doens't handle custom units or order in properties of same css declaration, the style is `as is`
+
+## How this works
+
+You write a css-like object, atomss parse your input and create a hash key for every declaration, such your parents too. Then for equal declarations the clsx helper will use the same classname.
+
+To avoid mismatch styles, atomss reverse the order of injection in clsx and filter the properties already used, the hash of a class like `color: red` will be different than `@media (min-width: 300px) { color: red }`. Then simple color declarations should not override the media query declaration.
