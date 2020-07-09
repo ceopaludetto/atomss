@@ -61,10 +61,9 @@ class Create {
 
     if (el) {
       const cache = JSON.parse(el?.textContent ?? '');
-      if (cache) {
+      if (cache && Object.keys(cache).length) {
         this.cacheManager.flush(cache);
       }
-      el.parentElement?.removeChild(el);
     }
   };
 
