@@ -2,7 +2,7 @@ import { isVirtual } from './injector';
 import { SetupOptions, CSSKeyframeRules, ScopedCSSRules } from './utils/dto';
 import { defaultInjector } from './utils/defaults';
 import {
-  getScriptElement,
+  ensureScriptElement,
   ensureBrowser,
   ensureServer,
 } from './utils/get.style';
@@ -57,7 +57,7 @@ class Create {
 
   public hydrate = () => {
     ensureBrowser('This method should run only in browser envs');
-    const el = getScriptElement();
+    const el = ensureScriptElement();
 
     if (el) {
       const cache = JSON.parse(el?.textContent ?? '');
@@ -87,8 +87,8 @@ class Create {
     )}</script>`;
   };
 
-  public getStyleComponent = () => {
-    ensureServer('getStyleComponent should run only in server');
+  public getStyleElement = () => {
+    ensureServer('getStyleElement should run only in server');
 
     if (isVirtual(this.injector)) {
       const rules = this.injector.getAll();
@@ -98,8 +98,8 @@ class Create {
     throw new Error('injector should be VirtualInjector');
   };
 
-  public getScriptComponent = () => {
-    ensureServer('getScriptComponent should run only in server');
+  public getScriptElement = () => {
+    ensureServer('getScriptElement should run only in server');
 
     return (
       <script id={CACHE} type="application/json">
@@ -124,5 +124,7 @@ export const clsx = inst.clsx;
 export const keyframes = inst.keyframes;
 export const getStyleTag = inst.getStyleTag;
 export const getScriptTag = inst.getScriptTag;
+export const getStyleElement = inst.getStyleElement;
+export const getScriptElement = inst.getScriptElement;
 export const hydrate = inst.hydrate;
 export const seal = inst.seal;

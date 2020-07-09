@@ -1,7 +1,7 @@
 import { ID, CACHE } from './constants';
 import invariant from 'tiny-invariant';
 
-export function getStyleElement(): HTMLStyleElement {
+export function ensureStyleElement(): HTMLStyleElement {
   const el = document.querySelector('style#' + ID);
   if (el) return el as HTMLStyleElement;
 
@@ -11,7 +11,7 @@ export function getStyleElement(): HTMLStyleElement {
   return document.head.appendChild(style);
 }
 
-export function getScriptElement(): HTMLScriptElement {
+export function ensureScriptElement(): HTMLScriptElement {
   const el = document.querySelector('script#' + CACHE);
 
   if (el) {

@@ -1,4 +1,4 @@
-import { getStyleElement, ensureBrowser } from './utils/get.style';
+import { ensureStyleElement, ensureBrowser } from './utils/get.style';
 
 interface ConstructorOptions {
   nonce?: string;
@@ -10,7 +10,7 @@ export class CSSOMInjector {
   public constructor({ nonce }: ConstructorOptions) {
     ensureBrowser('You cannot use this injector in non browser enviroments');
 
-    this.sheet = getStyleElement().sheet;
+    this.sheet = ensureStyleElement().sheet;
     if (this?.sheet?.ownerNode) {
       (this.sheet.ownerNode as HTMLStyleElement).nonce = nonce;
     }
@@ -22,7 +22,7 @@ export class CSSOMInjector {
 
   public clear() {
     this.sheet?.ownerNode?.parentElement?.removeChild(this.sheet.ownerNode);
-    this.sheet = getStyleElement().sheet;
+    this.sheet = ensureStyleElement().sheet;
   }
 }
 
@@ -32,7 +32,7 @@ export class DOMInjector {
   public constructor({ nonce }: ConstructorOptions) {
     ensureBrowser('You cannot use this injector in non browser enviroments');
 
-    this.target = getStyleElement();
+    this.target = ensureStyleElement();
     if (this.target) {
       this.target.nonce = nonce;
     }
@@ -44,7 +44,7 @@ export class DOMInjector {
 
   public clear() {
     this.target?.parentElement?.removeChild(this.target);
-    this.target = getStyleElement();
+    this.target = ensureStyleElement();
   }
 }
 
