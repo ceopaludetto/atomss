@@ -16,7 +16,7 @@ class Create {
   public injector = defaultInjector();
   private prefix = 'x';
   private cacheManager = new Cache();
-  private cssManager?: ReturnType<typeof manager>;
+  private cssManager!: ReturnType<typeof manager>;
 
   public constructor() {
     this.injector = defaultInjector();
@@ -44,15 +44,15 @@ class Create {
   };
 
   public css = (s: ScopedCSSRules) => {
-    return this.cssManager?.css(s);
+    return this.cssManager.css(s);
   };
 
   public keyframes = (s: CSSKeyframeRules) => {
-    return this.cssManager?.keyframes(s);
+    return this.cssManager.keyframes(s);
   };
 
   public clsx = (...styles: ScopedCSSRules[]) => {
-    return this.cssManager?.clsx(styles);
+    return this.cssManager.clsx(styles);
   };
 
   public hydrate = () => {
@@ -102,9 +102,13 @@ class Create {
     ensureServer('getScriptElement should run only in server');
 
     return (
-      <script id={CACHE} type="application/json">
-        {JSON.stringify(this.cacheManager.all())}
-      </script>
+      <script
+        id={CACHE}
+        type="application/json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(this.cacheManager.all()),
+        }}
+      ></script>
     );
   };
 
