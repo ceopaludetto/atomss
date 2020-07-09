@@ -19,5 +19,25 @@ describe('traverse.ts', () => {
         },
       });
     });
+
+    it('should transform inner entries to dash case', () => {
+      const css = {
+        color: 'red',
+        '@media (min-width: 300px)': {
+          '&:hover': {
+            backgroundColor: 'red',
+          },
+        },
+      };
+
+      expect(traverse(css)).toStrictEqual({
+        color: 'red',
+        '@media (min-width: 300px)': {
+          '&:hover': {
+            'background-color': 'red',
+          },
+        },
+      });
+    });
   });
 });
