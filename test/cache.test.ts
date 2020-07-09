@@ -1,4 +1,4 @@
-import { Cache } from '../src';
+import { Cache } from '../src/cache';
 
 describe('Cache', () => {
   it('should add key', () => {
