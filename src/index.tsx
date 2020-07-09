@@ -8,6 +8,7 @@ import {
 } from './utils/get.style';
 import { Cache } from './cache';
 import { ID, CACHE } from './utils/constants';
+import * as React from 'react';
 
 import { manager } from './css';
 
@@ -84,6 +85,27 @@ class Create {
     return `<script id=${CACHE} type="application/json">${JSON.stringify(
       this.cacheManager.all()
     )}</script>`;
+  };
+
+  public getStyleComponent = () => {
+    ensureServer('getStyleComponent should run only in server');
+
+    if (isVirtual(this.injector)) {
+      const rules = this.injector.getAll();
+      return <style id={ID}>{rules.join('')}</style>;
+    }
+
+    throw new Error('injector should be VirtualInjector');
+  };
+
+  public getScriptComponent = () => {
+    ensureServer('getScriptComponent should run only in server');
+
+    return (
+      <script id={CACHE} type="application/json">
+        {JSON.stringify(this.cacheManager.all())}
+      </script>
+    );
   };
 
   public seal = () => {
