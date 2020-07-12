@@ -10,11 +10,11 @@ export function manager(
   cache: Cache = new Cache()
 ) {
   return {
-    clsx(styles: ScopedCSSRules[]) {
+    clsx<T>(styles: ScopedCSSRules<T>[], props?: T) {
       const filter: StringifyReturn[] = [];
 
       const all = styles.reverse().map(style => {
-        const declarations = stringify(style);
+        const declarations = stringify(style, props);
 
         const classNames = toClassName({
           declarations,
@@ -38,8 +38,8 @@ export function manager(
 
       return `${prefix}${cache.get(style).hash}`;
     },
-    css(s: ScopedCSSRules) {
-      let style: ScopedCSSRules = traverse(s);
+    css<T>(s: ScopedCSSRules<T>) {
+      let style: ScopedCSSRules<T> = traverse<T>(s);
 
       return style;
     },

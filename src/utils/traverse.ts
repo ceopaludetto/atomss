@@ -17,8 +17,8 @@ export function traverseKeyframes(rules: CSSKeyframeRules) {
   return res.join('');
 }
 
-export function traverse(rules: ScopedCSSRules) {
-  let copy: ScopedCSSRules = {};
+export function traverse<T>(rules: ScopedCSSRules<T>) {
+  let copy: ScopedCSSRules<T> = {};
 
   Object.entries(rules).forEach(([key, props]) => {
     if (typeof props !== 'object') {
