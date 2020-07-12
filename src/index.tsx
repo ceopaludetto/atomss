@@ -64,7 +64,7 @@ class Create {
     return this.cssManager.keyframes(s);
   }
 
-  public clsx<T>(styles: ScopedCSSRules<T>[], props: T) {
+  public clsx<T>(styles: ScopedCSSRules<T>[], props?: T) {
     return this.cssManager.clsx(styles, props);
   }
 
