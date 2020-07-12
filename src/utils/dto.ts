@@ -8,34 +8,27 @@ export interface SetupOptions {
   cache?: Cache;
 }
 
-export type CSSProperties<T = object> = CSS.PropertiesFallback<
-  string | number | ((props: T) => string | number)
->;
-export type ScopedCSSProperties = Omit<CSSProperties, 'all'>;
+export type CSSProperties<T> = {
+  [P in keyof CSS.PropertiesFallback<string | number>]:
+    | CSS.PropertiesFallback<string | number>[P]
+    | ((props: T) => CSS.PropertiesFallback<string | number>[P]);
+};
+
+export type ScopedCSSProperties<T> = Omit<CSSProperties<T>, 'all'>;
 
 export type CSSRules<
-  T = object,
-  P extends Record<string, any> = CSSProperties<T>
-> = CSSStyleRules<P> & CSSGroupingRules<P>;
+  T,
+  P extends Record<string, any> = CSSProperties<T> & Record<string, any>
+> = CSSStyleRules<T, P>;
 
-export interface ScopedCSSRules<T> extends CSSRules<T, ScopedCSSProperties> {}
+export interface ScopedCSSRules<T>
+  extends CSSRules<T, ScopedCSSProperties<T> & Record<string, any>> {}
 
-export type CSSStyleRules<P extends Record<string, any> = CSSProperties> = P &
-  { [pseudo in CSS.SimplePseudos]?: P } & {
-    selectors?: { [selector: string]: P };
-  };
-
-export interface CSSGroupingRules<
-  P extends Record<string, any> = CSSProperties
-> {
-  '@media'?: {
-    [conditionText: string]: CSSRules<P>;
-  };
-  '@supports'?: {
-    [conditionText: string]: CSSRules<P>;
-  };
-}
+export type CSSStyleRules<
+  T,
+  P extends Record<string, any> = CSSProperties<T> & Record<string, any>
+> = P;
 
 export type CSSKeyframeRules =
-  | { [time in 'from' | 'to']?: CSSProperties }
-  | { [time: string]: CSSProperties };
+  | { [time in 'from' | 'to']?: CSSProperties<never> }
+  | { [time: string]: CSSProperties<never> };

@@ -1,4 +1,4 @@
-import { ScopedCSSRules, CSSGroupingRules } from './dto';
+import { ScopedCSSRules } from './dto';
 import { CSSOMInjector, DOMInjector, VirtualInjector } from '../injector';
 import { Cache } from '../cache';
 
@@ -17,7 +17,7 @@ export function isSub(prop: any): prop is Exclude<StringifyReturn, string> {
 }
 
 export function stringify<T>(
-  rules: ScopedCSSRules<T> | CSSGroupingRules,
+  rules: ScopedCSSRules<T>,
   props?: T
 ): StringifyReturn[] {
   const res: StringifyReturn[] = Object.entries(rules).map(([key, rule]) => {
