@@ -8,14 +8,17 @@ export interface SetupOptions {
   cache?: Cache;
 }
 
-export type CSSProperties = CSS.PropertiesFallback<string | number>;
+export type CSSProperties<T = object> = CSS.PropertiesFallback<
+  string | number | ((props: T) => string | number)
+>;
 export type ScopedCSSProperties = Omit<CSSProperties, 'all'>;
 
 export type CSSRules<
-  P extends Record<string, any> = CSSProperties
+  T = object,
+  P extends Record<string, any> = CSSProperties<T>
 > = CSSStyleRules<P> & CSSGroupingRules<P>;
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ScopedCSSRules extends CSSRules<ScopedCSSProperties> {}
+
+export interface ScopedCSSRules<T> extends CSSRules<T, ScopedCSSProperties> {}
 
 export type CSSStyleRules<P extends Record<string, any> = CSSProperties> = P &
   { [pseudo in CSS.SimplePseudos]?: P } & {

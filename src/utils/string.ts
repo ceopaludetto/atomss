@@ -16,17 +16,20 @@ export function isSub(prop: any): prop is Exclude<StringifyReturn, string> {
   return !!prop?.parent;
 }
 
-export function stringify(
-  rules: ScopedCSSRules | CSSGroupingRules
+export function stringify<T>(
+  rules: ScopedCSSRules<T> | CSSGroupingRules,
+  props?: T
 ): StringifyReturn[] {
   const res: StringifyReturn[] = Object.entries(rules).map(([key, rule]) => {
     if (typeof rule === 'object') {
-      return { parent: key, content: stringify(rule) } as Exclude<
+      return { parent: key, content: stringify(rule, props) } as Exclude<
         StringifyReturn,
         string
       >;
     }
-    return `${camelToDash(key)}:${rule};` as string;
+    return `${camelToDash(key)}:${
+      typeof rule === 'function' ? rule(props) : rule
+    };` as string;
   });
 
   return res;
